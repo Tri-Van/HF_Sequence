@@ -1,7 +1,8 @@
 rm(list=ls())
 library(readxl)
 library(survival)
-
+library(ggplot2)
+library(cmprsk)
 
 ##### 
 #V7_1Yr_Death#
@@ -126,16 +127,18 @@ legend("bottomright",
        box.lty = 0,  # Set box line type to 0 for no box
        bty = "n")   # Set legend box type to "n" for no box
 
-##### 
+#####  
 # split into 2 figures – biweekly (Va) and weekly (Vb) profiles (both with untreated for comparison – for each outcome? 
 # Use same colors for profiles 1a and 1b, and so forth? Use full lines for biweekly and dotted lines for weekly?
+rm(list=ls())
 library(cmprsk)
 library(readxl)
+library(ggplot2)
 #Import data
 # Set the directory where the file is located
 file_directory <- getwd()
-dfV7_1Yr_Death<-read_excel(file.path(file_directory, "V7_1Yr_Death.xlsx"))
-dfV7_1Yr_HFH  <-read_excel(file.path(file_directory, "V7_1Yr_HFH.xlsx"))
+dfV7_1Yr_Death<-read_excel(file.path(file_directory, "Data/V7_1Yr_Death.xlsx"))
+dfV7_1Yr_HFH  <-read_excel(file.path(file_directory, "Data/V7_1Yr_HFH.xlsx"))
 #Split data in weekly and biweekly
 # Subset for death
 Death_profile_biweekly <- subset(dfV7_1Yr_Death, Profile %in% c("Untreated", "Profile 1a", "Profile 2a",
@@ -156,7 +159,7 @@ HFH_profile_weekly     <- subset(dfV7_1Yr_HFH, Profile %in% c("Untreated", "Prof
 cum_inc_curve <- cuminc(Death_profile_biweekly$t_week_till_death, Death_profile_biweekly$t_numberofdeath, Death_profile_biweekly$Profile)
 par(cex = 0.8)  # Adjust this value to change the font size of legends
 plot.cuminc(cum_inc_curve,
-#           main ="Cumulative incidence of death",  
+           main ="(A) Cumulative Incidence of Death Biweekly Adjustments",  
             ylim=c(0, 0.2),
 #           wh=c(45,0.04), 
             wh=c(0,10),  #Move legends out of the way
@@ -174,11 +177,13 @@ legend("topleft",
        bg = "white",  # Background color of the legend box
        box.lty = 0,  # Set box line type to 0 for no box
        bty = "n")   # Set legend box type to "n" for no box
+#Export png as 600-600 Figure3A_Death_a
+
 #Weekly
 cum_inc_curve <- cuminc(Death_profile_weekly$t_week_till_death, Death_profile_weekly$t_numberofdeath, Death_profile_weekly$Profile)
 par(cex = 0.8)  # Adjust this value to change the font size of legends
 plot.cuminc(cum_inc_curve,
-#           main ="Cumulative incidence of death",  
+           main ="(B) Cumulative Incidence of Death Weekly Adjustments",  
             ylim=c(0, 0.2),
 #           wh=c(45,0.04), 
             wh=c(0,10),  #Move legends out of the way
@@ -196,12 +201,14 @@ legend("topleft",
        bg = "white",  # Background color of the legend box
        box.lty = 0,  # Set box line type to 0 for no box
        bty = "n")   # Set legend box type to "n" for no box
+# Export png 600-600 Figure3B_Death_b
+
 # Compute cumulative incidence curves - HFH
 #biweekly
 cum_inc_curve <- cuminc(ftime=HFH_profile_biweekly$Weeks, fstatus=HFH_profile_biweekly$HFH_outcomes, group=HFH_profile_biweekly$Profile)
 par(cex = 0.8)  # Adjust this value to change the font size of legends
 plot.cuminc(cum_inc_curve,
-#           main ="Cumulative incidence of death",  
+           main ="(C) Cumulative Incidence of HF Hospitalization Biweekly Adjustments",  
             ylim=c(0, 0.2),
 #           wh=c(45,0.04), 
             wh=c(0,10),  #Move legends out of the way
@@ -219,11 +226,13 @@ legend("topleft",
        bg = "white",  # Background color of the legend box
        box.lty = 0,  # Set box line type to 0 for no box
        bty = "n")   # Set legend box type to "n" for no box
+#Export 600-600 Figure3C_HFH_a
+
 #Weekly
 cum_inc_curve <- cuminc(ftime=HFH_profile_weekly$Weeks, fstatus=HFH_profile_weekly$HFH_outcomes, group=HFH_profile_weekly$Profile)
 par(cex = 0.8)  # Adjust this value to change the font size of legends
 plot.cuminc(cum_inc_curve,
-#           main ="Cumulative incidence of death",  
+           main ="(D) Cumulative Incidence of HF Hospitalization Weekly Adjustments",  
             ylim=c(0, 0.2),
 #           wh=c(45,0.04), 
             wh=c(0,10),  #Move legends out of the way
@@ -241,4 +250,6 @@ legend("topleft",
        bg = "white",  # Background color of the legend box
        box.lty = 0,  # Set box line type to 0 for no box
        bty = "n")   # Set legend box type to "n" for no box
+#Export 600-600 Figure3D_HFH_b
+
 

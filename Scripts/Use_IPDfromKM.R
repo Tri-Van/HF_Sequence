@@ -2,7 +2,9 @@
 #Extract data from IPDfromKM package and some basic KM graph
 
 library(IPDfromKM)
-SOLVD_placebo<-getpoints("C:/Users/Tri Van/Desktop/1Year_analysis/Capture.JPG",x1=0,x2=12,y1=0,y2=100)
+file_directory <- getwd()
+SOLVD_placebo<-getpoints(file.path(file_directory, "Data/SOLVD_placebo.JPG"),x1=0,x2=12,y1=0,y2=100)
+
 SOLVD_placebo
 SOLVD_trisk<-c(0,2,4,6,8,10,12) # unit =1 year
 SOLVD_nrisk<-c(1284,940,719,562,425,328,151)
@@ -31,9 +33,9 @@ summary(exponential.model)
 #plot(exponential.model)
 #
 df<-est_SOLVD_placebo$IPD
-write.csv(df,"C:/Users/Tri Van/Desktop/1Year_analysis/SOLVD_placebo_df.csv")
+write.csv(df,file.path(file_directory,"Data/SOLVD_placebo_df.csv"))
 
-df<-read.csv("C:/Users/Tri Van/Desktop/1Year_analysis/SOLVD_placebo_df.csv")
+df<-read.csv(file.path(file_directory,"Data/SOLVD_placebo_df.csv"))
 library(survival)
 km.model<-survfit(Surv(df$time,df$status)~1,type="kaplan-meier")
 km.model
@@ -52,21 +54,21 @@ exp(-2.0669)
 #or
 exp(-coef(exp.model)) # this is the constant rate/hazard... over the period of 12 year?
 #Try my TreeAge Model
-dftreeage<-read.csv("C:/Users/Tri Van/Desktop/1Year_analysis/treeage.csv")
+dftreeage<-read.csv(file.path(file_directory,"Data/treeage.csv"))
 library(survival)
 km.treeage<-survfit(Surv(dftreeage$t_lifeyear,dftreeage$t_numberofdeath)~1,type="kaplan-meier")
 km.treeage
 plot(km.treeage, main ="TreeAge KM curve",xlab="Time (years)",ylab="Survival Prob", col=c(1,5,10),lty=c(1,2,3),lwd=2)
 
 #Try my TreeAge Model with multiple Profiles
-dftreeage1<-read.csv("C:/Users/Tri Van/Desktop/1Year_analysis/treeage1.csv")
+dftreeage1<-read.csv(file.path(file_directory,"Data/treeage1.csv"))
 library(survival)
 km.treeage1<-survfit(Surv(dftreeage1$t_lifeyear,dftreeage1$t_numberofdeath)~dftreeage1$Profile,type="kaplan-meier")
 km.treeage1
 plot(km.treeage1, main ="TreeAge KM curve",xlab="Time (years)",ylab="Survival Prob", col=c(1,5,10),lty=c(1,2,3),lwd=2)
 
 #Try my TreeAge Model with multiple Profiles (1 year)#
-dftreeage2<-read.csv("C:/Users/Tri Van/Desktop/1Year_analysis/treeage2.csv")
+dftreeage2<-read.csv(file.path(file_directory,"Data/treeage2.csv"))
 library(survival)
 km.treeage2<-survfit(Surv(dftreeage2$t_lifeweek,dftreeage2$t_numberofdeath)~dftreeage2$Profile,type="kaplan-meier")
 km.treeage2
